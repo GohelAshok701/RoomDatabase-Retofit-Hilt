@@ -8,6 +8,8 @@ import android.view.View
 import androidx.activity.viewModels
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.app.roomdatabaseretofithilt.adapter.BlogAdapter
 import com.app.roomdatabaseretofithilt.database.AppDatabase
 import com.app.roomdatabaseretofithilt.databinding.ActivityMainBinding
 import com.app.roomdatabaseretofithilt.responses.Blog
@@ -21,11 +23,14 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
     lateinit var binding: ActivityMainBinding
     private val blogViewModel: BlogViewModel by viewModels()
+    lateinit var blogAdapter: BlogAdapter
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+
+        binding.rvBlogs.layoutManager = LinearLayoutManager(this)
 
         binding.btnCallApi.setOnClickListener(this)
     }
@@ -48,7 +53,9 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                             var blogList = it
                             blogViewModel.getBlogDao().delete()
                             blogViewModel.getBlogDao().insertAll(blogList)
-                            blogViewModel.getBlogDao().getAll()
+                            blogAdapter = BlogAdapter()
+                            binding.rvBlogs.adapter = blogAdapter
+                            blogAdapter.updateBlogList(blogViewModel.getBlogDao().getAll())
                         }
                     }
                     Status.LOADING -> {
