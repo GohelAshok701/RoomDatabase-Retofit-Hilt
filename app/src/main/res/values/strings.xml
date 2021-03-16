@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">RoomDatabase+Retofit+Hilt</string>
+    <string name="call_api">Call Api</string>
+</resources>
